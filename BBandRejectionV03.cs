@@ -24,7 +24,7 @@ using NinjaTrader.NinjaScript.DrawingTools;
 
 namespace NinjaTrader.NinjaScript.Strategies
 {
-    public class BBandRejection : Strategy
+    public class BBandRejectionV03 : Strategy
     {
         // ───────────────────────────────────────────
         // VARIABLES
@@ -38,7 +38,7 @@ namespace NinjaTrader.NinjaScript.Strategies
             if (State == State.SetDefaults)
             {
                 Description                     = "BB Rejection — Entre sur rejet confirmé d'une bande extrême Bollinger. TP sur touche de la bande opposée à la clôture. 1 seul trade par session.";
-                Name                            = "BBandRejection";
+                Name                            = "BBandRejectionV03";
                 Calculate                       = Calculate.OnEachTick;
                 EntriesPerDirection             = 1;
                 EntryHandling                   = EntryHandling.AllEntries;
