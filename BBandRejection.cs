@@ -61,7 +61,6 @@ namespace NinjaTrader.NinjaScript.Strategies
 
                 // ── Risk Management ──
                 StopLossPoints                  = 30;
-                MinRejectionPoints              = 4;
                 Quantity                        = 1;
 
                 // ── Time Filter (Exchange Time = US Eastern pour MNQ/CME) ──
@@ -171,61 +170,52 @@ namespace NinjaTrader.NinjaScript.Strategies
             //   → Non → on ne fait rien
             //   → Oui → étape 2
             //
-            // ÉTAPE 2 : La bougie a-t-elle CLÔTURÉ avec un REJET
-            //           suffisant (>= MinRejectionPoints) ?
+            // ÉTAPE 2 : Dominance de mèche
+            //   wickHigh = High[1] - Max(Open[1], Close[1])
+            //   wickLow  = Min(Open[1], Close[1]) - Low[1]
             //
             //   Rejet Lower Band → signal LONG :
             //     Touche :  Low[1]  <= LowerBB[1]
-            //     Rejet  :  Close[1] - LowerBB[1] >= MinRejectionPoints
+            //     Rejet  :  wickLow > wickHigh  (mèche basse dominante)
             //     → ACHAT
             //
             //   Rejet Upper Band → signal SHORT :
             //     Touche :  High[1] >= UpperBB[1]
-            //     Rejet  :  UpperBB[1] - Close[1] >= MinRejectionPoints
+            //     Rejet  :  wickHigh > wickLow  (mèche haute dominante)
             //     → VENTE
-            //
-            // ── EXEMPLE LONG ──
-            //   LowerBB = 150, Open = 170, Low = 135, Close = 160
-            //   Touche ? 135 <= 150            → OUI
-            //   Rejet  ? 160 - 150 = 10 pts   >= 4 pts → OUI
-            //   → ACHAT
             // ───────────────────────────────────────────
 
             double upperBB  = bb.Upper[1];
             double lowerBB  = bb.Lower[1];
             double barHigh  = High[1];
             double barLow   = Low[1];
+            double barOpen  = Open[1];
             double barClose = Close[1];
 
-            double minRej = MinRejectionPoints;
+            double wickHigh = barHigh - Math.Max(barOpen, barClose);
+            double wickLow  = Math.Min(barOpen, barClose) - barLow;
 
-            // ── SIGNAL LONG : Touche lower + rejet suffisant ──
-            bool touchedLower     = barLow <= lowerBB;
-            double rejDistLower   = barClose - lowerBB;
-
-            if (touchedLower && rejDistLower >= minRej)
+            // ── SIGNAL LONG : Touche lower + mèche basse dominante ──
+            if (barLow <= lowerBB && wickLow > wickHigh)
             {
                 EnterLong(Quantity, "BBRej_Long");
                 tradeTakenThisSession = true;
 
                 if (TraceOrders)
-                    Print(String.Format("{0} | SIGNAL LONG — Low={1} <= LowerBB={2}, Close={3}, Rejet={4:F2} pts >= {5} pts",
-                        Time[1], barLow, lowerBB, barClose, rejDistLower, minRej));
+                    Print(String.Format("{0} | SIGNAL LONG — Low={1} <= LowerBB={2}, wickLow={3:F2} > wickHigh={4:F2}",
+                        Time[1], barLow, lowerBB, wickLow, wickHigh));
                 return;
             }
 
-            // ── SIGNAL SHORT : Touche upper + rejet suffisant ──
-            bool touchedUpper     = barHigh >= upperBB;
-            double rejDistUpper   = upperBB - barClose;
-
-            if (touchedUpper && rejDistUpper >= minRej)
+            // ── SIGNAL SHORT : Touche upper + mèche haute dominante ──
+            if (barHigh >= upperBB && wickHigh > wickLow)
             {
                 EnterShort(Quantity, "BBRej_Short");
                 tradeTakenThisSession = true;
 
                 if (TraceOrders)
-                    Print(String.Format("{0} | SIGNAL SHORT — High={1} >= UpperBB={2}, Close={3}, Rejet={4:F2} pts >= {5} pts",
-                        Time[1], barHigh, upperBB, barClose, rejDistUpper, minRej));
+                    Print(String.Format("{0} | SIGNAL SHORT — High={1} >= UpperBB={2}, wickHigh={3:F2} > wickLow={4:F2}",
+                        Time[1], barHigh, upperBB, wickHigh, wickLow));
                 return;
             }
         }
@@ -260,14 +250,8 @@ namespace NinjaTrader.NinjaScript.Strategies
 
         [NinjaScriptProperty]
         [Range(1, 50)]
-        [Display(Name = "Min Rejection (Points)", Description = "Distance minimale entre la bande touchée et le Close pour valider le rejet. Défaut = 4 pts",
-            Order = 2, GroupName = "2. Risk Management")]
-        public int MinRejectionPoints { get; set; }
-
-        [NinjaScriptProperty]
-        [Range(1, 50)]
         [Display(Name = "Quantity", Description = "Nombre de contrats par entrée",
-            Order = 3, GroupName = "2. Risk Management")]
+            Order = 2, GroupName = "2. Risk Management")]
         public int Quantity { get; set; }
 
         #endregion
