@@ -1,0 +1,620 @@
+<title>Le bitcoin s'assagit</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap">
+<style>
+:root{
+  --paper:#f7f6f2; --card:#ffffff; --ink:#0f2035; --ink-soft:#31435c;
+  --muted:#69707c; --line:#e4e2da; --line-soft:#eeece5;
+  --gold:#bd8f2c; --gold-soft:#f3e8cd;
+  --green:#2e7d5c; --green-soft:#e0efe8;
+  --blue:#2b5fa3; --blue-soft:#e2eaf5;
+  --steel:#98a1ab; --steel-soft:#eceef0;
+  --purple:#7a5cb8; --purple-soft:#ece5f6;
+  --red:#bd4a3a; --red-soft:#f5e2de;
+}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);margin:0;padding:0;
+  font-family:Archivo,"Helvetica Neue",Arial,sans-serif;font-size:15px;line-height:1.5}
+.page{max-width:1180px;margin:0 auto;padding:44px 24px 28px;border-bottom:1px solid var(--line);
+  display:flex;flex-direction:column}
+.page:last-child{border-bottom:none}
+.pagehead{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:22px}
+.kicker{color:var(--muted);font-size:13.5px;margin:0 0 6px}
+h1{font-weight:800;font-size:44px;line-height:1.04;letter-spacing:-.5px;margin:0;text-wrap:balance}
+h2{font-weight:800;font-size:34px;line-height:1.06;letter-spacing:-.4px;margin:0;text-wrap:balance}
+.level{display:flex;gap:10px;align-items:center;text-align:right;flex:none}
+.level .txt b{display:block;font-size:13.5px}
+.level .txt span{color:var(--muted);font-size:12.5px}
+.level svg{flex:none}
+.grid{display:grid;gap:14px}
+.cols-2{grid-template-columns:1fr 1fr}
+.cols-3{grid-template-columns:repeat(3,1fr)}
+.cols-4{grid-template-columns:repeat(4,1fr)}
+.split{display:grid;grid-template-columns:360px 1fr;gap:18px;align-items:start}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+.card h3{margin:0 0 6px;font-size:15.5px;font-weight:700}
+.card p{margin:0;color:var(--ink-soft);font-size:13.8px}
+.dark{background:var(--ink);color:#fff;border:none}
+.dark .lbl{color:#aeb9c9;font-size:12.5px;font-weight:600;margin:0 0 6px}
+.dark p{color:#dbe2ec}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.tile .n{font-weight:800;font-size:33px;letter-spacing:-.5px;line-height:1.05;font-variant-numeric:tabular-nums}
+.tile .l{font-size:13px;color:var(--muted);margin-top:4px}
+.tile .s{font-size:12.5px;color:var(--ink-soft);margin-top:2px}
+.rule-ico{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:800;font-size:13px;flex:none}
+.rulecard{display:flex;gap:12px;align-items:flex-start}
+.pill{display:inline-block;border-radius:8px;padding:2px 9px;font-size:12px;font-weight:700}
+.statusbar{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;
+  background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 16px;margin-top:14px}
+.statusbar .read .k{color:var(--muted);font-size:12px}
+.statusbar .read .v{font-weight:700;font-size:15.5px}
+.statuschip{background:var(--ink);color:#fff;border-radius:10px;padding:10px 16px;display:flex;gap:12px;align-items:center}
+.statuschip b{font-size:15px;display:block}
+.statuschip span{font-size:12.5px;color:#c3cddb}
+.chart{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 8px 2px}
+.chart .cap{color:var(--muted);font-size:12.3px;padding:4px 10px 8px;border-top:1px solid var(--line-soft);margin-top:2px}
+.cwrap{width:100%}
+table{border-collapse:collapse;width:100%;font-size:13.8px;font-variant-numeric:tabular-nums}
+th{color:var(--muted);font-weight:600;font-size:12.5px;text-align:right;padding:7px 10px;border-bottom:1.5px solid var(--ink)}
+th:first-child,td:first-child{text-align:left}
+td{padding:7px 10px;border-bottom:1px solid var(--line-soft);text-align:right}
+tr.hl td{background:var(--gold-soft);font-weight:700}
+tr.hl2 td{background:var(--green-soft);font-weight:700}
+.foot{margin-top:26px;padding-top:10px;border-top:1px solid var(--line);display:flex;
+  justify-content:space-between;color:var(--muted);font-size:12px;gap:12px;flex-wrap:wrap}
+.note{color:var(--muted);font-size:12.8px;margin:10px 2px 0}
+.bignote{font-size:14.5px;color:var(--ink-soft);max-width:72ch}
+.tag{font-weight:800;background:var(--ink);color:#fff;border-radius:7px;padding:2px 8px;font-size:12.5px;margin-right:8px}
+.oklist{list-style:none;margin:8px 0 0;padding:0}
+.oklist li{padding:7px 0 7px 26px;position:relative;border-bottom:1px solid var(--line-soft);font-size:13.8px;color:var(--ink-soft)}
+.oklist li::before{content:"";position:absolute;left:2px;top:13px;width:9px;height:9px;border-radius:50%;background:var(--red)}
+.oklist.good li::before{background:var(--green)}
+.legend-note{font-size:12.5px;color:var(--muted)}
+.hero-meta{display:flex;gap:22px;flex-wrap:wrap;color:var(--muted);font-size:13px;margin-top:10px}
+.hero-meta b{color:var(--ink)}
+.verdict{border-left:4px solid var(--gold);padding:10px 14px;background:var(--card);border-radius:0 10px 10px 0;
+  border-top:1px solid var(--line);border-right:1px solid var(--line);border-bottom:1px solid var(--line)}
+.verdict h4{margin:0 0 4px;font-size:14px}
+.verdict p{margin:0;font-size:13.3px;color:var(--ink-soft)}
+.formula{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;background:#132a47;color:#e8eef7;
+  border-radius:10px;padding:14px 16px;line-height:1.75;overflow-x:auto}
+.formula b{color:#f0c869}
+@media (max-width:900px){
+  .split{grid-template-columns:1fr}
+  .cols-4{grid-template-columns:1fr 1fr}
+  .cols-3{grid-template-columns:1fr 1fr}
+  h1{font-size:34px} h2{font-size:27px}
+}
+@media (max-width:520px){
+  .cols-2,.cols-3,.cols-4{grid-template-columns:1fr}
+}
+/* ---------- variante PDF : une section = une page A4 paysage ---------- */
+body.printmode{background:#fff}
+body.printmode .page{max-width:none;width:1123px;height:794px;padding:26px 40px 14px;
+  border-bottom:none;page-break-after:always;overflow:hidden}
+body.printmode .page:last-of-type{page-break-after:auto}
+body.printmode h1{font-size:36px}
+body.printmode h2{font-size:29px}
+body.printmode .pagehead{margin-bottom:16px}
+body.printmode .foot{margin-top:auto}
+body.printmode #c_px{height:352px!important}
+body.printmode #c_eq{height:308px!important}
+body.printmode #c_dd{height:330px!important}
+body.printmode #c_vol{height:250px!important}
+body.printmode #c_prob{height:96px!important}
+body.printmode #c_oos{height:330px!important}
+body.printmode #c_heat{height:400px!important}
+body.printmode #c_thr{height:196px!important}
+body.printmode #c_wf{height:224px!important}
+body.printmode #c_boot{height:300px!important}
+body.printmode table{font-size:12.6px}
+body.printmode td,body.printmode th{padding:5.5px 9px}
+@media print{ .js-plotly-plot .modebar{display:none!important} }
+</style>
+
+<!-- ============ 0 · COUVERTURE ============ -->
+<section class="page" id="p0">
+  <div class="pagehead">
+    <div>
+      <p class="kicker">Étude quantitative &middot; bitcoin, 2010-2026</p>
+      <h1>Le bitcoin s'assagit.<br>La règle doit-elle changer&nbsp;?</h1>
+    </div>
+    <div class="level"><span class="lvlsvg" data-fill="0"></span>
+      <div class="txt"><b>Synthèse</b><span>10 pages</span></div></div>
+  </div>
+  <p class="bignote">Votre règle — acheter au croisement de la moyenne 3&nbsp;ans, vendre la moitié à
+  −20&nbsp;% du plus haut, le reste à −40&nbsp;% — a été rejouée semaine par semaine, sans tricher avec le temps.
+  Puis elle a été attaquée&nbsp;: autres moyennes, autres seuils, autres époques, 500&nbsp;trajectoires simulées.
+  Voici ce qui tient, ce qui est probable, et ce qui n'est que du passé.</p>
+  <div class="grid cols-4" style="margin-top:20px">
+    <div class="tile"><div class="n">×367</div><div class="l">La règle, depuis sa 1<sup>re</sup> entrée (fév. 2015)</div>
+      <div class="s">contre ×341 en achat-conservation</div></div>
+    <div class="tile"><div class="n" style="color:var(--green)">−45&nbsp;%</div><div class="l">Pire perte de la règle</div>
+      <div class="s">contre −83&nbsp;% en achat-conservation</div></div>
+    <div class="tile"><div class="n" style="color:var(--gold)">165&nbsp;%&nbsp;&rarr;&nbsp;43&nbsp;%</div><div class="l">Volatilité annuelle médiane, par cycle</div>
+      <div class="s">le tassement est réel et significatif</div></div>
+    <div class="tile"><div class="n" style="color:var(--purple)">−12&nbsp;/&nbsp;−24&nbsp;%</div><div class="l">Seuils adaptatifs recommandés aujourd'hui</div>
+      <div class="s">plus serrés que −20&nbsp;/&nbsp;−40, jamais plus larges</div></div>
+  </div>
+  <div class="hero-meta">
+    <span>Données <b>Coin Metrics</b>, quotidien 2010-2026</span>
+    <span>Décision <b>hebdomadaire</b>, exécution le lundi suivant</span>
+    <span>Frais <b>0,2&nbsp;%</b> par ordre (scénario défavorable testé)</span>
+    <span>Validation <b>2018-2021</b> &middot; test <b>2022-2026</b></span>
+  </div>
+  <div class="foot"><span>Étude quantitative bitcoin — SMA 156 &amp; amplitudes</span>
+    <span>Document d'analyse, pas un conseil en investissement</span><span>1</span></div>
+</section>
+
+<!-- ============ 1 · LA RÈGLE ============ -->
+<section class="page" id="p1">
+  <div class="pagehead">
+    <div><p class="kicker">La règle actuelle &middot; rejouée sans look-ahead</p>
+      <h2>Cinq entrées, cinq gains.</h2></div>
+    <div class="level"><span class="lvlsvg" data-fill="0.15"></span>
+      <div class="txt"><b>Volet 1</b><span>La règle</span></div></div>
+  </div>
+  <div class="split">
+    <div class="grid" style="gap:12px">
+      <div class="card rulecard"><div class="rule-ico" style="background:var(--green)">&uarr;</div>
+        <div><h3>Acheter 100&nbsp;%</h3><p>quand la clôture de la semaine repasse au-dessus de la moyenne
+        3&nbsp;ans (156&nbsp;semaines), après être passée en dessous.</p></div></div>
+      <div class="card rulecard"><div class="rule-ico" style="background:var(--gold)">&frac12;</div>
+        <div><h3>Vendre la moitié</h3><p>si le prix retombe 20&nbsp;% sous son plus haut depuis l'achat,
+        <b>le reste à −40&nbsp;%</b>. Le plus haut continue d'être suivi après la première vente.</p></div></div>
+      <div class="card rulecard"><div class="rule-ico" style="background:var(--ink)">&#8635;</div>
+        <div><h3>Racheter</h3><p>seulement après un retour sous la moyenne, puis un nouveau croisement
+        à la hausse. Les ordres partent le lundi qui suit le signal.</p></div></div>
+      <div class="card dark"><p class="lbl">Piège identifié</p>
+        <p>Si le plus haut est <b>figé</b> après la vente partielle au lieu de rester glissant, la deuxième
+        vente ne se déclenche plus jamais&nbsp;: la position restante traverse tous les hivers (−82&nbsp;%).
+        Le sommet doit rester glissant.</p></div>
+    </div>
+    <div>
+      <div class="chart"><div id="c_px" class="cwrap" style="height:430px"></div>
+        <div class="cap">Clôtures hebdomadaires Coin Metrics, échelle logarithmique. Zones violettes&nbsp;: position pleine
+        (foncé) puis demi-position (clair). Pointillés verticaux&nbsp;: halvings.</div></div>
+      <div class="statusbar">
+        <div class="read"><div class="k">Lecture au <span id="s_date"></span></div>
+          <div class="v">Position pleine depuis le <span id="s_entry"></span> à <span id="s_entryp"></span>&nbsp;$</div></div>
+        <div class="statuschip"><span style="font-size:19px">&uarr;</span>
+          <div><b>Moitié vendue sous <span id="s_sell1"></span>&nbsp;$</b>
+          <span>solde sous <span id="s_sell2"></span>&nbsp;$ &middot; plus haut <span id="s_peak"></span>&nbsp;$</span></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="foot"><span>Étude quantitative bitcoin — SMA 156 &amp; amplitudes</span><span>2</span></div>
+</section>
+
+<!-- ============ 2 · CE QUE ÇA A RENDU ============ -->
+<section class="page" id="p2">
+  <div class="pagehead">
+    <div><p class="kicker">Sans stratégie de poche, frais inclus</p>
+      <h2>Ce que la règle a rendu depuis 2014.</h2></div>
+    <div class="level"><span class="lvlsvg" data-fill="0.25"></span>
+      <div class="txt"><b>Volet 2</b><span>Le rendu</span></div></div>
+  </div>
+  <div class="chart"><div id="c_eq" class="cwrap" style="height:400px"></div>
+    <div class="cap">100&nbsp;$ placés en juillet 2014, rebalancement selon chaque règle, frais de 0,20&nbsp;% par ordre,
+    hors impôt. Zone jaune&nbsp;: validation (2018-2021)&nbsp;; zone rosée&nbsp;: test (2022-2026). Échelle logarithmique.</div></div>
+  <div class="split" style="grid-template-columns:1fr 330px;margin-top:14px">
+    <div class="card" style="padding:8px 10px">
+      <table id="t_final"></table>
+    </div>
+    <div>
+      <div class="card"><h3>Temps passé investi, 2014-2026</h3><div id="c_expo" style="height:118px"></div></div>
+      <p class="note">La règle bat l'achat-conservation en rendement ajusté du risque (Sharpe, Calmar, Ulcer),
+      pas de beaucoup en rendement brut&nbsp;: depuis la première entrée, ×367 contre ×341 — mais en n'étant
+      investie que 63&nbsp;% du temps, avec une pire perte divisée par deux. Cash rémunéré au taux court&nbsp;:
+      +1,2&nbsp;point de rendement annuel.</p>
+    </div>
+  </div>
+  <div class="foot"><span>Étude quantitative bitcoin — SMA 156 &amp; amplitudes</span><span>3</span></div>
+</section>
+
+<!-- ============ 3 · DRAWDOWNS ============ -->
+<section class="page" id="p3">
+  <div class="pagehead">
+    <div><p class="kicker">La vraie différence n'est pas le rendement</p>
+      <h2>Deux fois moins de douleur.</h2></div>
+    <div class="level"><span class="lvlsvg" data-fill="0.35"></span>
+      <div class="txt"><b>Volet 3</b><span>Le risque</span></div></div>
+  </div>
+  <div class="chart"><div id="c_dd" class="cwrap" style="height:390px"></div>
+    <div class="cap">Perte depuis le dernier plus haut de chaque portefeuille, depuis juillet 2014.</div></div>
+  <div class="grid cols-3" style="margin-top:14px">
+    <div class="tile"><div class="n" style="color:var(--red)">−83&nbsp;%</div><div class="l">Achat-conservation</div>
+      <div class="s">2018&nbsp;: il fallait tenir un portefeuille divisé par six</div></div>
+    <div class="tile"><div class="n" style="color:var(--gold)">−45&nbsp;%</div><div class="l">Règle actuelle</div>
+      <div class="s">pire épisode&nbsp;: 2021-2022, avant la sortie totale</div></div>
+    <div class="tile"><div class="n" style="color:var(--green)">−34&nbsp;%</div><div class="l">Sortie adaptative bornée</div>
+      <div class="s">au prix d'un rendement brut plus faible (p.&nbsp;8)</div></div>
+  </div>
+  <div class="foot"><span>Étude quantitative bitcoin — SMA 156 &amp; amplitudes</span><span>4</span></div>
+</section>
+
+<!-- ============ 4 · LE TASSEMENT ============ -->
+<section class="page" id="p4">
+  <div class="pagehead">
+    <div><p class="kicker">Votre intuition, mise à l'épreuve</p>
+      <h2>Le tassement est réel — et asymétrique.</h2></div>
+    <div class="level"><span class="lvlsvg" data-fill="0.45"></span>
+      <div class="txt"><b>Volet 4</b><span>Les amplitudes</span></div></div>
+  </div>
+  <div class="split" style="grid-template-columns:1fr 350px">
+    <div class="chart"><div id="c_vol" class="cwrap" style="height:300px"></div>
+      <div id="c_prob" class="cwrap" style="height:120px"></div>
+      <div class="cap">Haut&nbsp;: volatilité réalisée 52&nbsp;semaines (annualisée) et son niveau lissé (modèle espace-état).
+      Bas&nbsp;: probabilité d'être dans le régime «&nbsp;agité&nbsp;» (vol ~154&nbsp;%) — un modèle à 2 régimes de Markov.
+      Ce régime a quasi disparu depuis 2022.</div></div>
+    <div class="grid" style="gap:12px">
+      <div class="card"><h3>Vol médiane par cycle</h3><div id="c_cycvol" style="height:150px"></div></div>
+      <div class="card dark"><p class="lbl">Compression asymétrique</p>
+        <p>Quand la capitalisation décuple, les <b>hausses extrêmes</b> hebdomadaires perdent
+        ~5,3&nbsp;points, les <b>baisses extrêmes</b> seulement ~2,4. Le potentiel à protéger fond plus
+        vite que le risque à fuir&nbsp;: argument pour vendre <b>plus tôt</b>, pas plus tard.</p></div>
+      <div class="card"><h3>Les hivers résistent</h3>
+        <p>Drawdowns de cycle&nbsp;: −93, −85, −84, −77&nbsp;%… puis −49&nbsp;% (en cours). La profondeur des bears
+        se comprime beaucoup plus lentement que la volatilité. Quatre observations&nbsp;: tendance visible,
+        pas une loi démontrée.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Étude quantitative bitcoin — SMA 156 &amp; amplitudes</span><span>5</span></div>
+</section>
+
+<!-- ============ 5 · LES MODÈLES ============ -->
+<section class="page" id="p5">
+  <div class="pagehead">
+    <div><p class="kicker">Huit modèles, re-estimés chaque semaine avec le seul passé</p>
+      <h2>Aucun modèle ne connaît l'avenir.</h2></div>
+    <div class="level"><span class="lvlsvg" data-fill="0.55"></span>
+      <div class="txt"><b>Volet 5</b><span>Les modèles</span></div></div>
+  </div>
+  <div class="split" style="grid-template-columns:1fr 360px">
+    <div class="chart"><div id="c_oos" class="cwrap" style="height:380px"></div>
+      <div class="cap">Prévision de la volatilité des 26 semaines suivantes, hors échantillon (refit hebdomadaire).
+      À droite du trait&nbsp;: période de test jamais utilisée pour estimer.</div></div>
+    <div class="grid" style="gap:12px">
+      <div class="card" style="padding:8px 10px"><table id="t_rmse"></table></div>
+      <div class="verdict"><h4>Établi</h4><p>Le déclin existe&nbsp;: l'hypothèse «&nbsp;rien ne change&nbsp;» est écrasée
+        en test (erreur ×2,5). Demi-vie de la volatilité&nbsp;: ~10&nbsp;ans (IC&nbsp;8-15).</p></div>
+      <div class="verdict" style="border-color:var(--steel)"><h4>Non identifiable</h4><p>Temps, numéro de cycle,
+        capitalisation et liquidité sont statistiquement inséparables (corrélation cap-volume&nbsp;0,97). La forme
+        précise du déclin reste inconnue — seule son existence est solide.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Étude quantitative bitcoin — SMA 156 &amp; amplitudes</span><span>6</span></div>
+</section>
+
+<!-- ============ 6 · SMA 156 ============ -->
+<section class="page" id="p6">
+  <div class="pagehead">
+    <div><p class="kicker">104 à 208 semaines, tous les seuils, sans sélection rétroactive</p>
+      <h2>156 n'a rien de magique. Et c'est une bonne nouvelle.</h2></div>
+    <div class="level"><span class="lvlsvg" data-fill="0.65"></span>
+      <div class="txt"><b>Volet 6</b><span>L'entrée</span></div></div>
+  </div>
+  <div class="split" style="grid-template-columns:1fr 360px">
+    <div class="chart"><div id="c_heat" class="cwrap" style="height:430px"></div>
+      <div class="cap">Ratio de Calmar (rendement&nbsp;/&nbsp;pire perte) 2014-2026 pour chaque combinaison
+      moyenne mobile &times; seuil de première vente (la seconde = 2&times;). Encadré&nbsp;: votre règle.</div></div>
+    <div class="grid" style="gap:12px">
+      <div class="card"><h3>Un plateau, pas un pic</h3>
+        <p>Toutes les moyennes de 136 à 184 semaines font à peu près aussi bien. Votre 156 est
+        <b>dans</b> le plateau&nbsp;: la performance ne tient pas à un réglage chanceux à la semaine près.</p></div>
+      <div class="card"><h3>La vraie fragilité&nbsp;: le ré-armement</h3>
+        <p>Au-delà de ~192 semaines, l'exigence «&nbsp;repasser sous la moyenne avant de racheter&nbsp;»
+        fait rater des cycles entiers (SMA&nbsp;208&nbsp;: 3 ordres en 12 ans). Surveillez les croisements
+        répétés, pas la longueur.</p></div>
+      <div class="card"><h3>Si le cycle de 4 ans s'efface</h3>
+        <p>L'<b>EMA&nbsp;156</b> (même horizon, dégradation plus douce) ou un vote de plusieurs horizons
+        (52/104/156) remplacent proprement la SMA. Les filtres sophistiqués testés — KAMA, régression
+        de tendance — font nettement moins bien.</p></div>
+    </div>
+  </div>
+  <div class="foot"><span>Étude quantitative bitcoin — SMA 156 &amp; amplitudes</span><span>7</span></div>
+</section>
+
+<!-- ============ 7 · LA SORTIE ADAPTATIVE ============ -->
+<section class="page" id="p7">
+  <div class="pagehead">
+    <div><p class="kicker">Traduire le tassement en règle de vente</p>
+      <h2>S'adapter, oui — mais en se resserrant.</h2></div>
+    <div class="level"><span class="lvlsvg" data-fill="0.75"></span>
+      <div class="txt"><b>Volet 7</b><span>La sortie</span></div></div>
+  </div>
+  <div class="split" style="grid-template-columns:390px 1fr">
+    <div class="grid" style="gap:12px">
+      <div class="card dark"><p class="lbl">Chaque dimanche soir</p>
+        <div class="formula">&sigma; = &frac12;&middot;vol&nbsp;26&nbsp;sem + &frac12;&middot;vol&nbsp;104&nbsp;sem<br>
+        <b>D1</b> = borné( 0,5 &times; &sigma;/2 , <b>12&nbsp;%</b> &rarr; <b>20&nbsp;%</b> )<br>
+        <b>D2</b> = 2 &times; D1<br>
+        vendre &frac12; à D1 sous le plus haut, le reste à D2</div>
+        <p style="margin-top:10px">Jamais plus large que votre −20/−40&nbsp;: la volatilité ne peut que
+        <b>resserrer</b> les seuils. Aujourd'hui (&sigma; &asymp; 40&nbsp;%)&nbsp;: <b>−12&nbsp;% / −24&nbsp;%</b>.</p></div>
+      <div class="card"><h3>Pourquoi pas «&nbsp;proportionnel à la vol&nbsp;»&nbsp;?</h3>
+        <p>Testé&nbsp;: la version naïve calibrée sur 2014-2017 sort trop tard en 2018 (−57&nbsp;%) — elle hérite
+        des amplitudes de l'ancien monde, et la vol glissante s'élargit en plein krach. Le walk-forward honnête
+        converge de lui-même vers le resserrement à partir de 2021.</p></div>
+    </div>
+    <div>
+      <div class="chart"><div id="c_thr" class="cwrap" style="height:230px"></div></div>
+      <div class="chart" style="margin-top:12px"><div id="c_wf" class="cwrap" style="height:250px"></div>
+        <div class="cap">Hors échantillon 2018-2026, base 1 début 2018, échelle log. La zone d'apprentissage
+        (2014-2017) n'apparaît pas&nbsp;: elle a servi à calibrer.</div></div>
+    </div>
+  </div>
+  <div class="grid cols-4" style="margin-top:14px">
+    <div class="tile"><div class="n" style="color:var(--green)">2,18</div><div class="l">Calmar validation 2018-21</div><div class="s">contre 1,24 pour la règle actuelle</div></div>
+    <div class="tile"><div class="n" style="color:var(--green)">0,75</div><div class="l">Calmar test 2022-26</div><div class="s">contre 0,42 pour la règle actuelle</div></div>
+    <div class="tile"><div class="n">−25&nbsp;%</div><div class="l">Pire perte en test</div><div class="s">contre −38&nbsp;% pour la règle actuelle</div></div>
+    <div class="tile"><div class="n" style="color:var(--gold)">−17&nbsp;pts</div><div class="l">Rendement annuel 2016-2020 sacrifié</div><div class="s">le prix des seuils serrés dans les grandes hausses</div></div>
+  </div>
+  <div class="foot"><span>Étude quantitative bitcoin — SMA 156 &amp; amplitudes</span><span>8</span></div>
+</section>
+
+<!-- ============ 8 · CE QUI PEUT MAL TOURNER ============ -->
+<section class="page" id="p8">
+  <div class="pagehead">
+    <div><p class="kicker">500 trajectoires simulées, scénarios adverses</p>
+      <h2>Ce qui peut mal tourner.</h2></div>
+    <div class="level"><span class="lvlsvg" data-fill="0.85"></span>
+      <div class="txt"><b>Volet 8</b><span>Les limites</span></div></div>
+  </div>
+  <div class="split" style="grid-template-columns:1fr 380px">
+    <div class="chart"><div id="c_boot" class="cwrap" style="height:340px"></div>
+      <div class="cap">Rendement annuel sur 500 trajectoires rééchantillonnées par blocs de 26 semaines
+      (la structure des cycles est détruite, graine fixée). Les règles n'y battent l'achat-conservation
+      que dans ~4&nbsp;% des cas — leur surcroît de rendement <b>dépend des grandes tendances</b>&nbsp;;
+      la réduction de perte, elle, subsiste partout.</div></div>
+    <div>
+      <div class="card"><h3>Scénarios défavorables</h3>
+        <ul class="oklist">
+          <li>Marché latéral pluriannuel&nbsp;: les allers-retours rongent les deux règles, la version serrée davantage.</li>
+          <li>Krach éclair sans hiver (mars 2020)&nbsp;: on vend en bas, on rachète plus haut.</li>
+          <li>Bear lent de −35&nbsp;%&nbsp;: la règle actuelle garde la moitié indéfiniment.</li>
+          <li>Retour du régime haute-volatilité&nbsp;: la bornée re-élargit d'elle-même vers −20/−40, jamais au-delà.</li>
+        </ul></div>
+      <div class="card" style="margin-top:12px"><h3>Signes que le modèle est mort</h3>
+        <ul class="oklist">
+          <li>Vol réalisée 52&nbsp;sem &gt; 80&nbsp;% — la décroissance est rompue.</li>
+          <li>&ge;&nbsp;3 croisements de la SMA en 26 semaines — régime de whipsaw.</li>
+          <li>Un cycle à multiple &gt;&nbsp;&times;20 ou drawdown &lt;&nbsp;−85&nbsp;%.</li>
+        </ul></div>
+    </div>
+  </div>
+  <div class="foot"><span>Étude quantitative bitcoin — SMA 156 &amp; amplitudes</span><span>9</span></div>
+</section>
+
+<!-- ============ 9 · LA DÉCISION ============ -->
+<section class="page" id="p9">
+  <div class="pagehead">
+    <div><p class="kicker">Recommandation opérationnelle</p>
+      <h2>Trois gestes par dimanche.</h2></div>
+    <div class="level"><span class="lvlsvg" data-fill="1"></span>
+      <div class="txt"><b>Volet 9</b><span>La décision</span></div></div>
+  </div>
+  <div class="grid cols-3">
+    <div class="card"><div style="font-weight:800;font-size:30px">1</div><h3>Lire la tendance</h3>
+      <p>Clôture hebdo face à la SMA&nbsp;156 (l'EMA&nbsp;156 est équivalente). Rien à changer&nbsp;:
+      toute valeur 136-184 se vaut. Ordres le lendemain de la clôture.</p></div>
+    <div class="card"><div style="font-weight:800;font-size:30px">2</div><h3>Mettre à jour les seuils</h3>
+      <p>Noter le plus haut depuis l'achat (glissant, jamais figé). Calculer &sigma; et D1/D2.
+      Aujourd'hui&nbsp;: moitié sous <b id="s_sell1b"></b>&nbsp;$, solde sous <b id="s_sell2b"></b>&nbsp;$
+      (version bornée) — ou <b id="s_sell1f"></b>&nbsp;/&nbsp;<b id="s_sell2f"></b>&nbsp;$ si vous gardez −20/−40.</p></div>
+    <div class="card"><div style="font-weight:800;font-size:30px">3</div><h3>Journaliser</h3>
+      <p>Consigner &sigma;, D1, D2 et la décision. Chaque 1<sup>er</sup> janvier&nbsp;: re-calibration walk-forward.
+      Surveiller les trois signes d'invalidation (p.&nbsp;9).</p></div>
+  </div>
+  <div class="split" style="grid-template-columns:1fr 1fr;margin-top:14px">
+    <div class="card dark"><p class="lbl">Si vous privilégiez la pire perte</p>
+      <p><b>Adoptez la sortie bornée.</b> Meilleure sur les deux périodes hors échantillon (Calmar &times;1,8),
+      pertes limitées à −34&nbsp;% historiquement, complexité marginale&nbsp;: une formule, autant d'ordres.
+      Avec ~2 cycles de recul, l'amélioration est <b>probable, pas démontrée</b>.</p></div>
+    <div class="card dark" style="background:#243c5c"><p class="lbl">Si vous privilégiez le rendement composé</p>
+      <p><b>Gardez −20/−40.</b> La règle n'a pas été battue sur l'historique complet et redevient la meilleure
+      si les grandes amplitudes reviennent. Rémunérez le cash au taux court&nbsp;: +1 à +2 points par an, sans risque ajouté.</p></div>
+  </div>
+  <p class="note" style="margin-top:14px">Ce qui est établi&nbsp;: le tassement de la volatilité, l'asymétrie de la compression, le plateau des moyennes mobiles,
+  la réduction de perte par les règles de sortie. Ce qui est probable&nbsp;: la supériorité prospective des seuils resserrés-bornés. Ce qui est spéculatif&nbsp;:
+  la forme du déclin, le prochain sommet, le prochain creux. Aucune relation historique n'est garantie de persister.</p>
+  <div class="foot"><span>Étude quantitative bitcoin — SMA 156 &amp; amplitudes &middot; données Coin Metrics arrêtées au 23 mai 2026</span>
+    <span>Document de méthode personnelle, pas un conseil en investissement</span><span>10</span></div>
+</section>
+
+__PLOTLY_SCRIPT__
+<script>
+const DATA = __DATA_JSON__;
+const PRINT = typeof window.__PRINT__ !== "undefined";
+if (PRINT) document.body.classList.add("printmode");
+/* ---------- style commun ---------- */
+const C = {ink:"#0f2035", muted:"#69707c", line:"#e8e6de", gold:"#bd8f2c", green:"#2e7d5c",
+           blue:"#2b5fa3", steel:"#98a1ab", purple:"#7a5cb8", purpleSoft:"#ece5f6",
+           purpleFull:"#d9cdee", red:"#bd4a3a"};
+const FONT = {family:"Archivo, Helvetica Neue, Arial, sans-serif", color:C.ink, size:12};
+function base(extra){
+  return Object.assign({font:FONT, paper_bgcolor:"rgba(0,0,0,0)", plot_bgcolor:"rgba(0,0,0,0)",
+    margin:{l:52,r:14,t:8,b:34}, hovermode:"x unified",
+    xaxis:{gridcolor:C.line, linecolor:C.line, zeroline:false},
+    yaxis:{gridcolor:C.line, linecolor:C.line, zeroline:false},
+    legend:{orientation:"h", y:1.06, x:0, font:{size:11.5}},
+    hoverlabel:{font:{family:FONT.family,size:12}}}, extra||{});
+}
+const CFG = PRINT ? {staticPlot:true, responsive:false}
+                  : {responsive:true, displaylogo:false, scrollZoom:true,
+                     modeBarButtonsToRemove:["select2d","lasso2d","autoScale2d"]};
+function mk(id, traces, layout){ Plotly.newPlot(id, traces, layout, CFG); }
+const fmt$ = v => v==null ? "" : Math.round(v).toLocaleString("fr-FR");
+
+/* ---------- badges de niveau ---------- */
+document.querySelectorAll(".lvlsvg").forEach(el=>{
+  const f = parseFloat(el.dataset.fill||0);
+  el.innerHTML = `<svg width="46" height="30" viewBox="0 0 46 30">
+    <rect x="2" y="2" width="42" height="26" rx="8" fill="none" stroke="${C.ink}" stroke-width="3.4"/>
+    <rect x="7" y="7" width="${Math.max(0,32*f)}" height="16" rx="4" fill="${C.ink}"/></svg>`;
+});
+
+/* ---------- statut ---------- */
+const S = DATA.status, M = DATA.meta;
+const dfr = s => new Date(s).toLocaleDateString("fr-FR");
+document.getElementById("s_date").textContent = dfr(M.data_end);
+document.getElementById("s_entry").textContent = dfr(S.entry_date);
+document.getElementById("s_entryp").textContent = fmt$(S.entry_price);
+document.getElementById("s_sell1").textContent = fmt$(S.sell1_fixed);
+document.getElementById("s_sell2").textContent = fmt$(S.sell2_fixed);
+document.getElementById("s_peak").textContent = fmt$(S.peak);
+document.getElementById("s_sell1b").textContent = fmt$(S.sell1_born);
+document.getElementById("s_sell2b").textContent = fmt$(S.sell2_born);
+document.getElementById("s_sell1f").textContent = fmt$(S.sell1_fixed);
+document.getElementById("s_sell2f").textContent = fmt$(S.sell2_fixed);
+
+/* ---------- 1 · prix + SMA + transactions ---------- */
+(function(){
+  const shapes = DATA.segments.map(s=>({type:"rect", xref:"x", yref:"paper",
+      x0:s.start, x1:s.end, y0:0, y1:1, line:{width:0},
+      fillcolor: s.kind==="full" ? C.purpleFull : C.purpleSoft, layer:"below", opacity:.55}))
+    .concat(M.halvings.map(h=>({type:"line", xref:"x", yref:"paper", x0:h, x1:h, y0:0, y1:1,
+      line:{color:C.muted, width:1, dash:"dot"}})));
+  const buys = DATA.trades.filter(t=>t.side==="buy"), sells = DATA.trades.filter(t=>t.side==="sell");
+  mk("c_px", [
+    {x:DATA.px.d, y:DATA.px.close, name:"Bitcoin", mode:"lines", line:{color:C.ink,width:1.5},
+     hovertemplate:"%{y:,.0f} $<extra>bitcoin</extra>"},
+    {x:DATA.px.d, y:DATA.px.sma, name:"Moyenne 3 ans", mode:"lines", line:{color:C.steel,width:2},
+     hovertemplate:"%{y:,.0f} $<extra>SMA 156</extra>"},
+    {x:buys.map(t=>t.d), y:buys.map(t=>t.p), name:"Achat", mode:"markers",
+     marker:{symbol:"triangle-up", size:11, color:C.green, line:{color:"#fff",width:1}},
+     hovertemplate:"achat à %{y:,.0f} $<extra></extra>"},
+    {x:sells.map(t=>t.d), y:sells.map(t=>t.p), name:"Vente", mode:"markers",
+     marker:{symbol:"triangle-down", size:11, color:C.red, line:{color:"#fff",width:1}},
+     hovertemplate:"vente à %{y:,.0f} $<extra></extra>"},
+  ], base({shapes, yaxis:{type:"log", gridcolor:C.line, tickformat:",.0f", zeroline:false},
+      xaxis: PRINT ? {gridcolor:C.line} : {gridcolor:C.line, rangeslider:{visible:true, thickness:.07}}}));
+})();
+
+/* ---------- 2 · courbes de capital ---------- */
+const ZONES = [
+ {type:"rect",xref:"x",yref:"paper",x0:"2018-01-01",x1:"2022-01-01",y0:0,y1:1,line:{width:0},fillcolor:"#eda100",opacity:.07,layer:"below"},
+ {type:"rect",xref:"x",yref:"paper",x0:"2022-01-01",x1:DATA.meta.data_end,y0:0,y1:1,line:{width:0},fillcolor:"#bd4a3a",opacity:.06,layer:"below"}];
+mk("c_eq", [
+  {x:DATA.equity.d, y:DATA.equity.bh.map(v=>v*100), name:"Achat-conservation", line:{color:C.steel,width:1.6}, hovertemplate:"%{y:,.0f} $<extra>achat-conservation</extra>"},
+  {x:DATA.equity.d, y:DATA.equity.act.map(v=>v*100), name:"Règle actuelle (−20/−40)", line:{color:C.gold,width:2}, hovertemplate:"%{y:,.0f} $<extra>règle actuelle</extra>"},
+  {x:DATA.equity.d, y:DATA.equity.born.map(v=>v*100), name:"Sortie adaptative bornée", line:{color:C.green,width:2}, hovertemplate:"%{y:,.0f} $<extra>adaptative bornée</extra>"},
+], base({shapes:ZONES, yaxis:{type:"log",gridcolor:C.line,tickformat:",.0f",zeroline:false}}));
+
+/* table finale */
+(function(){
+  const F = DATA.final, rows = [
+    ["100 $ en juil. 2014 →", v=>fmt$(v*100)+" $", "valeur_finale"],
+    ["Rendement / an", v=>(v*100).toFixed(1).replace(".",",")+" %", "CAGR"],
+    ["Volatilité", v=>(v*100).toFixed(0)+" %", "vol_annualisee"],
+    ["Pire perte", v=>(v*100).toFixed(0)+" %", "max_drawdown"],
+    ["Pire durée sous l'eau", v=>Math.round(v)+" sem.", "duree_max_dd_semaines"],
+    ["Sharpe", v=>v.toFixed(2).replace(".",","), "sharpe"],
+    ["Calmar", v=>v.toFixed(2).replace(".",","), "calmar"],
+    ["Ulcer index", v=>v.toFixed(1).replace(".",","), "ulcer_index"],
+    ["Ordres passés", v=>Math.round(v), "nb_transactions"],
+  ];
+  const cols = [["Achat-conservation","Buy&Hold",""],["Règle actuelle","Actuelle_SMA156_20_40","hl"],
+                ["Adaptative bornée","Adaptative_bornee_0.5","hl2"]];
+  let h = "<tr><th></th>"+cols.map(c=>"<th>"+c[0]+"</th>").join("")+"</tr>";
+  rows.forEach(r=>{ h += "<tr><td>"+r[0]+"</td>"+cols.map(c=>"<td>"+r[1](F[c[1]][r[2]])+"</td>").join("")+"</tr>"; });
+  document.getElementById("t_final").innerHTML = h;
+})();
+
+/* exposition */
+mk("c_expo", [{ type:"bar", orientation:"h",
+  y:["Adaptative","Actuelle","Achat-cons."],
+  x:[DATA.final["Adaptative_bornee_0.5"].temps_investi_pct*100,
+     DATA.final["Actuelle_SMA156_20_40"].temps_investi_pct*100, 100],
+  marker:{color:[C.green,C.gold,C.steel]}, text:["49 %","63 %","100 %"], textposition:"outside",
+  hoverinfo:"skip"}],
+  base({margin:{l:86,r:40,t:4,b:20}, xaxis:{range:[0,115],gridcolor:C.line,ticksuffix:" %"},
+        yaxis:{gridcolor:"rgba(0,0,0,0)"}, showlegend:false, hovermode:false}));
+
+/* ---------- 3 · drawdowns ---------- */
+mk("c_dd", [
+  {x:DATA.equity.d, y:DATA.equity.dd.bh, name:"Achat-conservation", line:{color:C.steel,width:1.3}, fill:"tozeroy", fillcolor:"rgba(152,161,171,.18)", hovertemplate:"%{y:.0f} %<extra>achat-conservation</extra>"},
+  {x:DATA.equity.d, y:DATA.equity.dd.act, name:"Règle actuelle", line:{color:C.gold,width:1.6}, hovertemplate:"%{y:.0f} %<extra>règle actuelle</extra>"},
+  {x:DATA.equity.d, y:DATA.equity.dd.born, name:"Adaptative bornée", line:{color:C.green,width:1.6}, hovertemplate:"%{y:.0f} %<extra>adaptative bornée</extra>"},
+], base({shapes:ZONES, yaxis:{gridcolor:C.line,ticksuffix:" %",zeroline:false}}));
+
+/* ---------- 4 · volatilité ---------- */
+mk("c_vol", [
+  {x:DATA.vol.d, y:DATA.vol.rv52, name:"Vol réalisée 52 sem.", line:{color:C.gold,width:1.4}, hovertemplate:"%{y:.0f} %<extra>vol 52 sem.</extra>"},
+  {x:DATA.vol.level_d, y:DATA.vol.level, name:"Niveau lissé (espace-état)", line:{color:C.ink,width:2}, hovertemplate:"%{y:.0f} %<extra>niveau lissé</extra>"},
+], base({margin:{l:52,r:14,t:8,b:22}, yaxis:{gridcolor:C.line,ticksuffix:" %"},
+        shapes:M.halvings.map(h=>({type:"line",xref:"x",yref:"paper",x0:h,x1:h,y0:0,y1:1,line:{color:C.muted,width:1,dash:"dot"}}))}));
+mk("c_prob", [{x:DATA.vol.prob_d, y:DATA.vol.prob, name:"P(régime agité)", fill:"tozeroy",
+  line:{color:C.purple,width:1}, fillcolor:"rgba(122,92,184,.25)", hovertemplate:"%{y:.0f} %<extra>régime agité</extra>"}],
+  base({margin:{l:52,r:14,t:2,b:26}, showlegend:false, yaxis:{gridcolor:C.line,ticksuffix:" %",range:[0,105]}}));
+mk("c_cycvol", [{type:"bar", x:DATA.cycles_vol.labels, y:DATA.cycles_vol.rv52_med,
+  marker:{color:[C.steel,C.steel,C.steel,C.steel,C.gold]},
+  text:DATA.cycles_vol.rv52_med.map(v=>v.toFixed(0)+" %"), textposition:"outside", hoverinfo:"skip"}],
+  base({margin:{l:34,r:6,t:14,b:40}, showlegend:false, hovermode:false,
+        yaxis:{gridcolor:C.line,ticksuffix:" %",range:[0,190]}, xaxis:{tickangle:-35}}));
+
+/* ---------- 5 · OOS ---------- */
+mk("c_oos", [
+  {x:DATA.oos.d, y:DATA.oos.obs, name:"Observée (26 sem. suivantes)", line:{color:C.ink,width:2.2}, hovertemplate:"%{y:.0f} %<extra>observée</extra>"},
+  {x:DATA.oos.d, y:DATA.oos.m2, name:"Décroissance exponentielle (temps)", line:{color:C.blue,width:1.5}, hovertemplate:"%{y:.0f} %<extra>modèle temps</extra>"},
+  {x:DATA.oos.d, y:DATA.oos.m5, name:"Numéro de cycle", line:{color:C.green,width:1.5}, hovertemplate:"%{y:.0f} %<extra>modèle cycle</extra>"},
+  {x:DATA.oos.d, y:DATA.oos.m1, name:"Vol récente reconduite", line:{color:C.gold,width:1.3,dash:"dot"}, hovertemplate:"%{y:.0f} %<extra>marche aléatoire</extra>"},
+], base({yaxis:{gridcolor:C.line,ticksuffix:" %"},
+  shapes:[{type:"line",xref:"x",yref:"paper",x0:"2022-01-01",x1:"2022-01-01",y0:0,y1:1,line:{color:C.muted,width:1.4,dash:"dash"}}],
+  annotations:[{x:"2022-01-01",y:1.03,xref:"x",yref:"paper",text:"validation | test",showarrow:false,font:{size:11,color:C.muted}}]}));
+
+(function(){
+  const R = DATA.rmse, names = {M0_constante:"Rien ne change (constante)", M1_marche_aleatoire:"Vol récente reconduite",
+    M2_exp_temps:"Décroissance expo. (temps)", M3_loi_puissance:"Loi de puissance", M4_log_cap:"Capitalisation",
+    M5_cycle:"Numéro de cycle", M6_AR_vol:"Auto-régressif", "M7_cap+ARvol":"Cap + vol récente"};
+  let h = "<tr><th>Erreur de prévision (RMSE, log)</th><th>valid.</th><th>test</th></tr>";
+  Object.keys(names).forEach(k=>{
+    const cls = k==="M0_constante" ? ' style="color:'+C.red+';font-weight:700"' : "";
+    h += "<tr><td"+cls+">"+names[k]+"</td><td"+cls+">"+R["valid_2018_21"][k].toFixed(2).replace(".",",")+
+         "</td><td"+cls+">"+R["test_2022+"][k].toFixed(2).replace(".",",")+"</td></tr>";
+  });
+  document.getElementById("t_rmse").innerHTML = h;
+})();
+
+/* ---------- 6 · heatmap ---------- */
+(function(){
+  const H = DATA.heat;
+  mk("c_heat", [{type:"heatmap", x:H.d1.map(v=>v+" %"), y:H.ma, z:H.z,
+    colorscale:[[0,"#f4f2ec"],[0.5,"#b9cde6"],[1,"#2b5fa3"]], zmin:0, zmax:1.45,
+    colorbar:{title:{text:"Calmar",side:"right"}, thickness:12, outlinewidth:0},
+    hovertemplate:"SMA %{y} sem · D1 %{x}<br>Calmar %{z:.2f}<extra></extra>"}],
+  base({margin:{l:52,r:8,t:8,b:40}, hovermode:"closest",
+    xaxis:{title:{text:"Première vente, % sous le plus haut (la seconde = 2×)",font:{size:11.5,color:C.muted}},gridcolor:"rgba(0,0,0,0)"},
+    yaxis:{title:{text:"Moyenne mobile (semaines)",font:{size:11.5,color:C.muted}},gridcolor:"rgba(0,0,0,0)"},
+    shapes:[{type:"rect",x0:3.5,x1:4.5,y0:5.5,y1:7.5,xref:"x",yref:"y",line:{color:C.gold,width:3}}],
+    annotations:[{x:4,y:8.3,xref:"x",yref:"y",text:"votre règle",showarrow:false,font:{size:11.5,color:C.gold}}]}));
+})();
+
+/* ---------- 7 · seuils + walk-forward ---------- */
+mk("c_thr", [
+  {x:DATA.thr.d, y:DATA.thr.d1, name:"D1 adaptatif", line:{color:C.green,width:1.8}, hovertemplate:"−%{y:.0f} %<extra>D1</extra>"},
+  {x:DATA.thr.d, y:DATA.thr.d2, name:"D2 adaptatif", line:{color:C.purple,width:1.8}, hovertemplate:"−%{y:.0f} %<extra>D2</extra>"},
+], base({margin:{l:46,r:12,t:8,b:24}, yaxis:{gridcolor:C.line,ticksuffix:" %",range:[0,46]},
+  shapes:[{type:"line",xref:"paper",yref:"y",x0:0,x1:1,y0:20,y1:20,line:{color:C.gold,width:1.2,dash:"dash"}},
+          {type:"line",xref:"paper",yref:"y",x0:0,x1:1,y0:40,y1:40,line:{color:C.gold,width:1.2,dash:"dash"}}],
+  annotations:[{x:.01,y:21.6,xref:"paper",yref:"y",text:"règle fixe −20 %",showarrow:false,font:{size:11,color:C.gold},xanchor:"left"},
+               {x:.01,y:41.6,xref:"paper",yref:"y",text:"règle fixe −40 %",showarrow:false,font:{size:11,color:C.gold},xanchor:"left"}]}));
+mk("c_wf", [
+  {x:DATA.wf.d, y:DATA.wf.bh, name:"Achat-conservation", line:{color:C.steel,width:1.3}, hovertemplate:"×%{y:.2f}<extra>achat-conservation</extra>"},
+  {x:DATA.wf.d, y:DATA.wf.act, name:"Règle actuelle", line:{color:C.gold,width:1.7}, hovertemplate:"×%{y:.2f}<extra>règle actuelle</extra>"},
+  {x:DATA.wf.d, y:DATA.wf.born, name:"Adaptative bornée", line:{color:C.green,width:1.7}, hovertemplate:"×%{y:.2f}<extra>adaptative bornée</extra>"},
+  {x:DATA.wf.wf_d, y:DATA.wf.wf, name:"Adaptative walk-forward", line:{color:C.purple,width:1.3,dash:"dot"}, hovertemplate:"×%{y:.2f}<extra>walk-forward</extra>"},
+], base({margin:{l:46,r:12,t:8,b:24}, yaxis:{type:"log",gridcolor:C.line},
+  shapes:[{type:"line",xref:"x",yref:"paper",x0:"2022-01-01",x1:"2022-01-01",y0:0,y1:1,line:{color:C.muted,width:1.3,dash:"dash"}}]}));
+
+/* ---------- 8 · bootstrap ---------- */
+mk("c_boot", [
+  {type:"bar", x:DATA.boot.bh.x.map(v=>v*100), y:DATA.boot.bh.y, name:"Achat-conservation", marker:{color:C.steel}, opacity:.75, hovertemplate:"%{y} trajectoires<extra>achat-conservation</extra>"},
+  {type:"bar", x:DATA.boot.act.x.map(v=>v*100), y:DATA.boot.act.y, name:"Règle actuelle", marker:{color:C.gold}, opacity:.75, hovertemplate:"%{y} trajectoires<extra>règle actuelle</extra>"},
+  {type:"bar", x:DATA.boot.born.x.map(v=>v*100), y:DATA.boot.born.y, name:"Adaptative bornée", marker:{color:C.green}, opacity:.75, hovertemplate:"%{y} trajectoires<extra>adaptative bornée</extra>"},
+], base({barmode:"overlay", hovermode:"x",
+  xaxis:{gridcolor:C.line,ticksuffix:" %",title:{text:"Rendement annuel simulé",font:{size:11.5,color:C.muted}},range:[-40,220]},
+  yaxis:{gridcolor:C.line,title:{text:"Trajectoires",font:{size:11.5,color:C.muted}}}}));
+
+window.__chartsReady = true;
+</script>
