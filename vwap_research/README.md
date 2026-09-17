@@ -28,3 +28,24 @@ python3 -m vwapresearch.ingest        # ou PYTHONPATH=src python3 src/vwapresear
 python3 scripts/build_features_events.py
 python3 scripts/phase1_descriptive.py # TRAIN uniquement
 ```
+
+## Pipeline complet (ordre d'exécution)
+1. `scripts/audit_timezone.py` — preuve empirique que les timestamps Oanda sont UTC
+2. `PYTHONPATH=src python3 src/vwapresearch/ingest.py` — parquet propres
+3. `scripts/audit_quality.py` — audit qualité (results/data_audit.md)
+4. `scripts/build_features_events.py` — features + événements, splits TRAIN/VAL/VAULT
+5. `scripts/phase1_descriptive.py` — cartographie (TRAIN)
+6. `scripts/phase2_interactions.py` — interactions à heure fixée (TRAIN)
+7. `scripts/phase3_candidates.py`, `phase3_preopen.py`, `phase3b_preopen_grid.py` — candidats & plateaux (TRAIN)
+8. `scripts/phase5_validation.py` — validation 2015-2018, règles gelées
+9. `scripts/phase6_stress.py` — coûts, perturbations, walk-forward, Monte Carlo, DSR
+10. `scripts/phase7_vault.py` — OUVERTURE UNIQUE du Vault (2019-20 + 2026)
+11. `scripts/phase8_figures.py`, `phase9_deliverables.py`, `phase10_report.py` — figures, CSV, PDF
+
+## Conclusion (résumé)
+Une anomalie de mean reversion pré-open (07:30–09:30 ET) autour des bandes VWAP de session
+était réelle sur 2005–2014 (plateau complet de paramètres, deux instruments, DSR 0,95),
+mais a décru hors échantillon : validation 2015–2018 en échec sur critères pré-enregistrés,
+Vault 2019–2020 négatif, tranche 2026 indistinguable de zéro (n≈70–90).
+**Aucune stratégie n'est recommandée pour le trading réel.**
+Rapport complet : `results/VWAP_Research_Report.pdf` · Registre : `experiments/registry.csv`.

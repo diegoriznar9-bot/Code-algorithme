@@ -1,0 +1,38 @@
+{
+ "note": "Aucune stratégie n'est recommandée pour le trading réel (voir rapport).",
+ "candidates_locked": {
+  "PREFADE-S": {
+   "instruments_researched": [
+    "NQ/MNQ via NAS100 CFD proxy",
+    "ES/MES via SPX500 CFD proxy"
+   ],
+   "session": "CME futures day 18:00 ET -> 17:00 ET",
+   "timezone": "America/New_York",
+   "timeframe": "1 minute",
+   "vwap": "session VWAP anchored 18:00 ET, price=(H+L+C)/3, weights=tick volume",
+   "bands": "vwap +/- L * sigma, sigma = sqrt(cum w var of price around running vwap)",
+   "setup": "first/any touch of the 2.0 sigma band between 07:30:00 and 09:29:59 ET",
+   "entry": "market at next 1-min open, direction = toward VWAP (fade)",
+   "stop": "2.5 * sigma(at signal) from entry, fixed",
+   "target": "dynamic session VWAP (limit re-priced each bar)",
+   "time_stop": "180 minutes",
+   "eod_exit": "16:55 ET (never reached given time-stop)",
+   "position_size": "1 contract (research), no scale-in",
+   "max_trades_day": 6,
+   "daily_loss_limit": "none in research build",
+   "no_trade": "outside 07:30-09:30 ET window; sigma warmup < 25 bars"
+  },
+  "PREFADE-F": "PREFADE-S + filter |speed5| < 0.9 (arrivee lente)"
+ },
+ "splits": {
+  "TRAIN": "2005-2014",
+  "VAL": "2015-2018",
+  "VAULT": "2019-01..2020-05-14 + 2026-03..2026-09"
+ },
+ "costs_base_per_side_pts": {
+  "NQ": 0.315,
+  "MNQ": 0.51,
+  "ES": 0.276,
+  "MES": 0.354
+ }
+}

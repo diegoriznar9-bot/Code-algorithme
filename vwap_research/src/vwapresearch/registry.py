@@ -19,8 +19,7 @@ def log(phase: str, hypothesis: str, dataset: str, split: str, params: str,
         n_obs, result: str, decision: str, reason: str) -> str:
     os.makedirs(os.path.dirname(os.path.abspath(REG_PATH)), exist_ok=True)
     new = not os.path.exists(REG_PATH)
-    with open(REG_PATH) as f if not new else open(os.devnull):
-        n_existing = sum(1 for _ in open(REG_PATH)) - 1 if not new else 0
+    n_existing = 0 if new else max(0, sum(1 for _ in open(REG_PATH)) - 1)
     exp_id = f"E{n_existing + 1:04d}"
     with open(REG_PATH, "a", newline="") as f:
         w = csv.DictWriter(f, fieldnames=FIELDS)

@@ -40,6 +40,11 @@ class ExecSpec:
     cost_per_side_pts: float = 0.0
     slip_entry_pts: float = 0.0
     slip_exit_pts: float = 0.0
+    entry_mode: str = "next_open"           # "next_open" | "limit_band"
+    # limit_band: resting limit at the signal bar's band price, filled during
+    # the signal bar itself (requires the event filter to guarantee an
+    # overshoot beyond the limit so the fill is credible); management starts
+    # on the signal bar, same-bar stop counted pessimistically.
 
 
 def run(frame: pd.DataFrame, signals: pd.DataFrame, spec: ExecSpec,
@@ -68,10 +73,14 @@ def run(frame: pd.DataFrame, signals: pd.DataFrame, spec: ExecSpec,
         day = sess[i]
         if day_count.get(day, 0) >= spec.max_trades_day:
             continue
-        j = i + 1
-        if sess[j] != day:                      # next bar in another session
-            continue
-        entry = op[j] + side * spec.slip_entry_pts
+        if spec.entry_mode == "limit_band":
+            j = i
+            entry = float(signals.loc[t_sig, "limit_px"]) + side * spec.slip_entry_pts
+        else:
+            j = i + 1
+            if sess[j] != day:                  # next bar in another session
+                continue
+            entry = op[j] + side * spec.slip_entry_pts
         s_sig = sg[i]
         if spec.stop_pts is not None:
             stop_d = spec.stop_pts
