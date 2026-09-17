@@ -1,0 +1,81 @@
+=== Épisodes de drawdown > 50 % (détection automatique) ===
+ episode     sommet  prix_sommet      creux  prix_creux  drawdown  multiple_creux_prec  log_ret_creux_sommet  duree_hausse_sem  duree_baisse_sem  vitesse_hausse  vitesse_baisse recuperation
+       1 2010-11-06        0.401 2010-12-09       0.200    -0.501                4.671                 1.541            15.857             4.714           0.097          -0.148   2011-01-21
+       2 2011-06-08       29.030 2011-11-18       2.105    -0.927              145.156                 4.978            25.857            23.286           0.193          -0.113   2013-02-19
+       3 2013-04-09      230.683 2013-07-06      66.342    -0.712              109.585                 4.697            72.571            12.571           0.065          -0.099   2013-11-05
+       4 2013-12-04     1134.932 2015-01-14     175.638    -0.845               17.107                 2.840            21.571            58.000           0.132          -0.032   2017-02-23
+       5 2017-12-16    19640.514 2018-12-15    3185.074    -0.838              111.824                 4.717           152.429            52.000           0.031          -0.035   2020-11-30
+       6 2021-04-13    63445.638 2021-07-20   29766.658    -0.531               19.920                 2.992           121.429            14.000           0.025          -0.054   2021-10-19
+       7 2021-11-08    67541.756 2022-11-09   15758.291    -0.767                2.269                 0.819            15.857            52.286           0.052          -0.028   2024-03-04
+
+Dernier ATH : 2025-10-06 à 124824 $ ; drawdown courant : -38.6% (min depuis ATH : -49.1%)
+
+=== Volatilité réalisée 52 s (annualisée) par cycle de halving ===
+            mean  median    max
+cycle_num                      
+0          1.424   1.646  1.843
+1          0.918   0.792  1.508
+2          0.791   0.753  1.205
+3          0.651   0.644  0.834
+4          0.438   0.432  0.504
+
+=== Semi-volatilité baissière 52 s par cycle ===
+            mean  median
+cycle_num               
+0          0.788   0.794
+1          0.695   0.604
+2          0.566   0.577
+3          0.504   0.507
+4          0.271   0.279
+
+=== Régressions sur log(vol réalisée 52 s), erreurs Newey-West (52 lags) ===
+  temps (exp decay)      pente=-0.0676  IC95%=[-0.0891,-0.0461]  R2=0.547  p=6.99e-10
+  log(temps)             pente=-0.7678  IC95%=[-0.9938,-0.5418]  R2=0.557  p=2.77e-11
+  log(prix)              pente=-0.0855  IC95%=[-0.1227,-0.0482]  R2=0.406  p=6.78e-06
+  log(capitalisation)    pente=-0.0801  IC95%=[-0.1135,-0.0468]  R2=0.419  p=2.43e-06
+  numero de cycle        pente=-0.2367  IC95%=[-0.3201,-0.1533]  R2=0.522  p=2.64e-08
+  demi-vie de la volatilité (modèle exponentiel) : 10.3 ans
+
+=== RMSE hors échantillon (log vol 26 s à horizon 26 s), refit hebdo expanding ===
+                     valid_2018_21  test_2022+
+M0_constante                0.2567      0.5125
+M1_marche_aleatoire         0.3898      0.2188
+M2_exp_temps                0.2682      0.1996
+M3_loi_puissance            0.2510      0.2414
+M4_log_cap                  0.2390      0.3034
+M5_cycle                    0.2157      0.2757
+M6_AR_vol                   0.2908      0.3079
+M7_cap+ARvol                0.2588      0.2432
+
+=== AIC/BIC in-sample (indicatif ; ne mesure PAS la capacité prédictive) ===
+  temps (exp decay)      AIC=   135.2  BIC=   144.5
+  log(temps)             AIC=   117.8  BIC=   127.1
+  log(prix)              AIC=   345.0  BIC=   354.3
+  log(capitalisation)    AIC=   327.1  BIC=   336.4
+  numero de cycle        AIC=   176.6  BIC=   185.9
+
+=== Markov switching : 2 régimes de variance (rendements hebdo) ===
+  vol régime calme : 52.5% ann. ; régime agité : 153.5% ann.
+  part de temps en régime agité par année :
+  2010:56%  2011:84%  2012:24%  2013:63%  2014:18%  2015:9%  2016:5%  2017:52%  2018:40%  2019:13%  2020:12%  2021:31%  2022:6%  2023:2%  2024:1%  2025:0%  2026:1%
+
+=== Espace-état (niveau local + pente stochastique) sur log RV26 ===
+/usr/local/lib/python3.11/dist-packages/statsmodels/tsa/statespace/mlemodel.py:737: ConvergenceWarning: Maximum Likelihood optimization failed to converge. Check mle_retvals
+  mlefit = super().fit(
+  niveau lissé (vol ann.) : 2012:91%  2015:60%  2018:98%  2021:77%  2024:46%  2026:38%
+
+=== Régression quantile des rendements hebdo sur log(capitalisation) ===
+  q=0.05 : pente=+0.01030  IC95%=[+0.00626,+0.01435]
+  q=0.25 : pente=-0.00002  IC95%=[-0.00196,+0.00191]
+  q=0.75 : pente=-0.00586  IC95%=[-0.00823,-0.00349]
+  q=0.95 : pente=-0.02319  IC95%=[-0.02745,-0.01894]
+
+=== Excursions favorables (MFE) / défavorables (MAE) après entrée SMA156 ===
+    entree      prix     mfe  mae_abs  max_dd_apres
+2015-02-01   227.111 459.353   -0.029        -0.834
+2019-04-14  5156.804  22.954   -0.002        -0.750
+2020-04-26  7684.069  15.075    0.000        -0.750
+2023-11-05 35105.042   2.519    0.000        -0.468
+2026-03-22 68018.153   0.209   -0.030        -0.058
+
+OK
