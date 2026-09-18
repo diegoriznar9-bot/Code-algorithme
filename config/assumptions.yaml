@@ -1,0 +1,109 @@
+# =============================================================================
+# Poche actions - hypotheses de la recherche quantitative
+# Toute valeur marquee TODO doit etre confirmee avant l'execution du backtest.
+# Aucune valeur de ce fichier ne doit etre inventee : une hypothese non
+# confirmee reste TODO et est signalee comme telle dans le rapport final.
+# =============================================================================
+
+meta:
+  projet: "Construction de la poche actions (33% du portefeuille global)"
+  branche: "claude/equity-pocket-quantitative-research-6o9fdb"
+  derniere_maj: "2026-09-18"
+
+# -----------------------------------------------------------------------------
+# 1. Strategie LQQ : confirmee par l'utilisateur le 2026-09-18
+#    Machine a etats mensuelle avec hysteresis. Le signal pilote LA POCHE
+#    ENTIERE, pas seulement la ligne LQQ.
+# -----------------------------------------------------------------------------
+strategie_lqq:
+  statut: "CONFIRME"
+  indicateur: "performance du Nasdaq-100 sur 9 mois"
+  formule: "m(t) = NDX[fin_de_mois t] / NDX[fin_de_mois t-9] - 1"
+  frequence_mesure: "mensuelle, a la cloture du dernier jour de bourse du mois"
+  seuil_entree: 0.03          # m > +3%  -> etat INVESTI
+  seuil_sortie: -0.07         # m < -7%  -> etat MONETAIRE
+  zone_morte: "entre -7% et +3% : l'etat precedent est conserve"
+  portee: "TOUTE la poche actions bascule, pas uniquement LQQ"
+  etat_initial_backtest: "INVESTI si m > +3% a la premiere date, sinon MONETAIRE"
+
+  # --- points a confirmer ---
+  indice_utilise: "TODO"      # NDX price return ou NDX total return ?
+  timing_execution: "TODO"    # cloture du dernier jour du mois, ou ouverture du 1er jour suivant ?
+  destination_monetaire: "TODO"  # fonds monetaire PEA ? livret ? quel rendement retenu ?
+
+# -----------------------------------------------------------------------------
+# 2. Allocation actuelle (a preciser : ISIN + poids exacts)
+# -----------------------------------------------------------------------------
+allocation_actuelle:
+  statut: "INCOMPLET"
+  lqq: 0.70
+  defensifs: 0.10             # sante + conso/croissance US - ISIN TODO
+  defense_energie: 0.20       # defense militaire + energie - ISIN TODO
+  lignes_exactes: "TODO"      # liste ISIN -> poids
+
+# -----------------------------------------------------------------------------
+# 3. Contraintes d'investissement
+# -----------------------------------------------------------------------------
+contraintes:
+  enveloppe: "TODO"                    # PEA / CTO / PEA+CTO / assurance-vie
+  etf_hors_pea_autorises: "TODO"
+  devise_reference: "TODO"             # defaut propose : EUR
+  horizon_annees: "TODO"               # defaut propose : >= 10
+  drawdown_max_acceptable: "TODO"      # defaut de travail : -45% sur la poche
+  nb_lignes_cible: [3, 6]
+  poids_min_par_ligne: 0.05
+
+# -----------------------------------------------------------------------------
+# 4. Frais et frictions (defauts proposes, a confirmer)
+# -----------------------------------------------------------------------------
+couts:
+  statut: "DEFAUTS_PROPOSES"
+  courtage_pct: 0.0010
+  courtage_min_eur: 2.0
+  slippage_lqq_pct: 0.0005
+  slippage_etf_larges_pct: 0.0003
+  fiscalite: "hors backtest, commentee qualitativement"
+
+# -----------------------------------------------------------------------------
+# 5. Proxy LQQ (si historique reel insuffisant)
+#    r_proxy = 2 * r_NDX - cout_financement * 1 - TER/252
+#    Le proxy est TOUJOURS valide contre l'historique reel LQQ (depuis 2006-06-27)
+#    avant toute utilisation sur periode longue.
+# -----------------------------------------------------------------------------
+proxy_lqq:
+  levier: 2.0
+  rebalancement: "quotidien"
+  ter_annuel: 0.0060                   # source : Amundi, a re-verifier sur factsheet
+  cout_financement: "TODO"             # taux court USD historique - source a fixer
+  validation_obligatoire: true
+
+# -----------------------------------------------------------------------------
+# 6. Donnees - BLOQUANT
+#    L'egress de l'environnement refuse Yahoo, Stooq, justETF, Amundi, iShares,
+#    FRED. Seuls PyPI, GitHub et WebSearch sont accessibles.
+# -----------------------------------------------------------------------------
+donnees:
+  statut: "BLOQUANT - voie d'acces a trancher"
+  hotes_bloques: [yahoo, stooq, justetf, amundietf, ishares, fred, nasdaq, tiingo, eodhd]
+  hotes_accessibles: [pypi.org, github.com, raw.githubusercontent.com]
+  regle_integrite: >
+    Aucune serie de prix ne doit etre fabriquee, approximee de memoire ou
+    reconstituee sans etiquetage explicite. Les donnees reelles et les donnees
+    reconstituees portent une colonne data_kind distincte, propagee jusqu'aux
+    graphiques et aux tableaux du rapport.
+
+# -----------------------------------------------------------------------------
+# 7. Backtest
+# -----------------------------------------------------------------------------
+backtest:
+  frequences_rebalancement_testees: [mensuelle, trimestrielle, semestrielle, annuelle]
+  benchmarks:
+    - "strategie LQQ seule (avec le signal 9 mois)"
+    - "LQQ buy-and-hold"
+    - "allocation actuelle (avec le signal 9 mois)"
+    - "Nasdaq-100 sans levier"
+    - "indice actions mondial"
+  walk_forward:
+    fenetre_in_sample_annees: 5
+    fenetre_out_of_sample_annees: 2
+  bootstrap: "block bootstrap stationnaire"
