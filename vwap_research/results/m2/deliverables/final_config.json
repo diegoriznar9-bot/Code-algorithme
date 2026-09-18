@@ -1,0 +1,23 @@
+{
+ "verdict": "Aucune stratégie recommandée (échec validation 2015-2018). Hypothèse forte inversée: expansion directe=continuation.",
+ "M2-CTX": {
+  "signal": "touch bande 2.5σ VWAP session (ancrage 18:00 ET)",
+  "fenetre": "09:30-13:30 ET",
+  "contexte": {
+   "eq120_slope": "< 0.75 (|ΔVWAP 2h avant impulsion|/σ)",
+   "imp_maxrun": ">= 4"
+  },
+  "entree": "marché open minute suivante, sens vers VWAP",
+  "stop": "2.5σ",
+  "cible": "VWAP dynamique",
+  "time_stop": "240 min",
+  "max_trades_jour": 6,
+  "cotes": "les deux"
+ },
+ "M2-BASE": "idem sans contexte",
+ "splits": {
+  "TRAIN": "2005-2014",
+  "VAL": "2015-2018",
+  "VAULT": "non ouvert (m2)"
+ }
+}

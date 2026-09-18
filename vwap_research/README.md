@@ -49,3 +49,12 @@ mais a décru hors échantillon : validation 2015–2018 en échec sur critères
 Vault 2019–2020 négatif, tranche 2026 indistinguable de zéro (n≈70–90).
 **Aucune stratégie n'est recommandée pour le trading réel.**
 Rapport complet : `results/VWAP_Research_Report.pdf` · Registre : `experiments/registry.csv`.
+
+## Mission 2 (2026-09-18) : Équilibre → Expansion directe → Extension extrême → Fade
+Recherche ciblée (scripts `scripts/m2_*.py`, résultats `results/m2/`).
+**Verdict : hypothèse forte falsifiée et INVERSÉE** — les impulsions directes/rapides sortant
+d'un équilibre continuent (−0,2..−0,9σ) ; seules les extensions laborieuses réversent.
+La variante récupérable (VWAP plate + impulsion soutenue, fade 2,5σ, 09h30–13h30 ET) est
+marginale in-sample, incohérente NQ/ES, et son edge tombe à ≈0 en validation 2015–2018
+(4/4 candidats en échec sur critères pré-enregistrés). Vault non ouvert (rien à confirmer).
+Rapport : `results/m2/M2_Expansion_MeanReversion_Report.pdf`.
